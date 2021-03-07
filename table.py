@@ -45,9 +45,9 @@ class Table:
             if(item[0] == '$'):
                 isAction = False
 
-        self.print_table(self.action)
-        print('\n')
-        self.print_table(self.goto)
+        #self.print_table(self.action)
+        #print('\n')
+        #self.print_table(self.goto)
 
         
     def rotate(self):

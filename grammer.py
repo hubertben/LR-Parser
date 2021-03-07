@@ -7,12 +7,12 @@ class Grammer:
     def __init__(self, grammer):
        self.grammer = grammer
        self.tokenize()
-       self.print_table(self.grammer)
+       #self.print_table(self.grammer)
 
     def tokenize(self):
         grammer_table = []
         for item in self.grammer:
-            print(type(item), item)
+            #print(type(item), item)
             item = item.split(' ')#[item[i].replace(' ', '') for i in range(len(item))]
             while("" in item) : 
                 item.remove("") 
