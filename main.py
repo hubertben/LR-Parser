@@ -10,24 +10,27 @@ def process(inp, grammer, table):
     accept = False
     inp = inp.split(' ') # input as id for now, change to token later to acom numbers and letters
     stack = [('!', 0)] # (action id, state)
-    
+    write_list = []
     red = False
 
     id = 0
     state = 0
 
     while(not accept):
-
+        print(stack)
+       
         if(not red):
             id = inp.pop(0)
             state = int(stack[-1][1])
         else:
             state = int(stack[-1][1])
         
+        print_list = [id] + inp
+        print('Input :', print_list)
         red = False
+        
 
-        print('~~~~~~~~~~~~~~~~~~~~~~~~')
-        print('ID :', id, '| State :', state)
+        #print('ID :', id, '| State :', state)
 
         prove = ''
         for item in table.action:
@@ -36,11 +39,17 @@ def process(inp, grammer, table):
 
         print('Prove :', prove)
 
+        write_list.append(format_writable(stack, print_list, prove))
+
+        print('~~~~~~~~~~~~~~~~~~~~~~~~')
+
         if(prove == ' ' or prove == ''):
+            write_to_file(write_list)
             print('SYNTAX INCOMPATABLE')
             return 
 
         if(prove == 'AC'):
+            write_to_file(write_list)
             print('SYNTAX COMPATABLE')
             return 
 
@@ -48,7 +57,7 @@ def process(inp, grammer, table):
             #print('SHIFT')
             temp = (id, prove[1:])
             stack.append(temp)
-            print(stack)
+            
 
         elif(prove[0] == 'R'): # Reduce
             #print('REDUCE')
@@ -93,14 +102,40 @@ def process(inp, grammer, table):
 
             stack.append((new_tuple[0], new_tuple[1]))   
             red = True
-            print(stack)
             
+        
 
         else:
             raise NameError('Not Interpretable by Language Grammer')
             return -1
+    
+
+def format_writable(stack, input, prove):
+    string = '' 
+    for c in stack:
+        if c[0] != '!':
+            string += str(c[0])
+        string += str(c[1])
+    string += ' ' * (15 - len(string))
+    for i in input:
+        string += i
+    string += ' ' * (35 - len(string))
+    p1 = 'Shift' if prove[0] == 'S' else 'Reduce'
+    p2 = prove[1]
+    string += p1 + ' '
+    string += p2
+    return string
+
+def write_to_file(l):
+    file1 = open("output.txt","w+") 
+    for f in l:
+        file1.readline()
+        write_string = str(f) + '\n'
+        file1.write(write_string)
+    file1.close()
 
 
 grammer = Grammer(fr.read_grammer())
 table = Table(fr.read_table())
-process('id + id * ( id * ( id + id ) + id ) $', grammer, table)
+process('( id + id ) * id $', grammer, table)
+
